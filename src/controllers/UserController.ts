@@ -8,9 +8,14 @@ const userService = new UserService();
 class UserController {
   async create(req: Request, res: Response) {
     log.info('Creating a new user');
-    const user = await userService.createUser(req.body);
+    try {
+      const user = await userService.createUser(req.body);
 
-    return res.send(omit(user.toJSON(), 'password'));
+      return res.send(omit(user.toJSON(), 'password'));
+    } catch (error) {
+      log.error(error);
+      return res.status(400).send(error.message);
+    }
 
   };
 
